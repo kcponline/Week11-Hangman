@@ -6,8 +6,10 @@
 // console.log(chosenWord);
 
 // pseudo 3 - since randomization works, now add exports. for other js file to connect
-var wordsList   = ["jerome", "neena", "darion"];
+var wordsList   = ["c"];
 var chosenWord  = ""; // solution will be held here.
 
 exports.chosenWord = wordsList[Math.floor(Math.random() * wordsList.length)]; 
-console.log(chosenWord);
+// console.log('game.chosenWord: ', chosenWord);
+
+// exports.chosenWord;

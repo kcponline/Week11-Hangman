@@ -1,6 +1,9 @@
 // 
-var letterResult = require('./word.js');
-	console.log('letter.wordResult', letterResult.wordResult);
+var word = require('./word.js');
+	console.log('letter.wordResult: ', word.wordResult);
 
-exports.letterResult;
+var letterwordResult = word.wordResult;
+	console.log(letterwordResult);
+
+exports.letterwordResult;
 

@@ -1,6 +1,6 @@
 // pseudo 3 - make sure modularization works and get the chosenWord from game.js
-var game = require('./game.js');
-	console.log('game', game);
+// var game = require('./game.js');
+// 	console.log('main game log: ', game);
 
 // // pseudo 1 - make sure node works with simple user input if-then evaluation
 // console.log("Guess the first letter of a Marvel Superhero name!")
@@ -29,10 +29,11 @@ var game = require('./game.js');
 // }
 
 // pseudo 5 - modularized playerGuess evaluation and display back result
-var word = require('./word.js');
-	console.log('word', word);
-var letter = require('./letter.js');
-	console.log('letter', letter);
+console.log("Let's Play Hangman!");
 
-console.log("Hard code guess - neena!");
-console.log('result', letter.letterResult);
+var word = require('./word.js');
+	console.log(word.askQuestion);
+	
+
+
+
