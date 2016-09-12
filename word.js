@@ -1,53 +1,50 @@
+var Dud = require('./dud.js');
 
-var game = require('./game.js');
-	console.log('word.game', game.chosenWord);
-
-var word = game.chosenWord;
-
-var inquirer = require('inquirer');
-
-function Programmer(name){
-	this.name = name;
-	console.log('word.Programmer', this);
-};
-
-Programmer.prototype.printInfo = function(name){
-	if(this.name == word) {
-		console.log('guessed right: ' + this.name);
-	}else {
-		console.log('guessed wrong: ' + this.name);
+var PartyBus = function(driverName, startLocation, destination){
+	this.duds = [];
+	this.driverName = driverName;
+	this.startLocation = startLocation;
+	this.destination = destination;
+	this.addDud = function(g, n, r){
+		this.duds.push(new Dud(g, n, r));
 	}
-};
+}
 
-var count = 0;
+module.exports = PartyBus;
 
-var programmerArray = [];
+	updateGuesses: function(letter){
+		//if the letter is not in the guessedLetters array
+		//and
+		//the letter is not in the lettersOfTheWord array
+		//then
+		//make guesses go down
 
-var askQuestion = function() {
+		if ((this.guessedLetters.indexOf(letter) == -1) && (this.lettersOfTheWord.indexOf(letter) == -1)){
+			
+			this.guessedLetters.push(letter);
 
-	if (count < 3) {
+			this.guessesLeft--;
 
-		inquirer.prompt({
-			name : 'name',
-			message : 'Guess Letter: '
-		}).then(function(answer) {
+			document.querySelector('#guesses-remaining').innerHTML = this.guessesLeft;
 
-			var playerGuess = new Programmer(answer.name);
-			programmerArray.push(playerGuess);
-			// playerGuess.printInfo();
-			count++;
-			askQuestion();
-			// playerGuess.printInfo();
-		});
-	}else {
-		console.log('over');
-		for (var x = 0; x < programmerArray.length; x++) {
-			programmerArray[x].printInfo();
+			document.querySelector("#guessed-letters").innerHTML = this.guessedLetters.join(', ');
 		}
-	}
-};
+	},
+	updateMatchedLetters: function(letter){
+		for (var i = 0; i < this.lettersOfTheWord.length; i++) {
+			if ((letter === this.lettersOfTheWord[i]) && (this.matchedLetters.indexOf(letter) == -1)){
+				this.matchedLetters.push(letter);
+			};
+		};
+	},
 
-askQuestion();
+// document.onkeyup = function(event) {
+// 	hangmanGame.letterGuessed = String.fromCharCode(event.keyCode).toLowerCase();
+// 	hangmanGame.updatePage(hangmanGame.letterGuessed);
+// }
+
+
+
 
 // // pseudo 5 - modularize playerGuess and chosenWord evaluation
 // var main = require('./main.js');
