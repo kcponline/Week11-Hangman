@@ -89,12 +89,14 @@ var HangmanGame = function(){ // turn from obj to constructor.
 		this.lettersOfTheWord = this.wordInPlay.split('');
 			console.log ('setupGame.lettersOfTheWord: ', this.lettersOfTheWord);
 		// this.rebuildWordView();
+		this.wordviewObj = new Letter(this.lettersOfTheWord, this.matchedLetters);
+		this.wordView = this.wordviewObj.wordView;
 		this.processUpdateTotalGuesses();
 	// },
 	};
 	this.updatePage = function(letter) {
 		if (this.guessesLeft == 0){
-			// this.restartGame();
+			this.restartGame();
 			console.log("over");
 		}else{
 			// this.updateGuesses(letter);
@@ -110,15 +112,15 @@ var HangmanGame = function(){ // turn from obj to constructor.
 			this.wordviewObj = new Letter(this.lettersOfTheWord, this.matchedLetters);
 			this.wordView = this.wordviewObj.wordView;
 
-			// if (this.updateWins() == true){
-			// 	this.restartGame();
-			// }
+			if (this.updateWins() == true){
+				this.restartGame();
+			}
 			// this.wordObj = new Word(letter);
 			// console.log('wordObj', wordObj);
 			
 			
 			// console.log('letterObj: ', this.letterObj);
-			console.log('not over');
+			// console.log('not over');
 		}
 
 	};
@@ -174,55 +176,55 @@ var HangmanGame = function(){ // turn from obj to constructor.
 	// 	document.querySelector('#current-word').innerHTML = wordView;
 	// }, // move to letter.js
 
-	// this.restartGame = function(){
-	// 	// document.querySelector('#guessed-letters').innerHTML = '';
-	// 	this.wordInPlay = null;
-	// 	this.lettersOfTheWord = [];
-	// 	this.matchedLetters = [];
-	// 	this.guessedLetters = [];
-	// 	this.guessesLeft = 0;
-	// 	this.totalGuesses = 0;
-	// 	this.letterGuessed = null;
-	// 	// this.setupGame();
-	// 	// this.rebuildWordView();
-	// }
+	this.restartGame = function(){
+		// document.querySelector('#guessed-letters').innerHTML = '';
+		this.wordInPlay = null;
+		this.lettersOfTheWord = [];
+		this.matchedLetters = [];
+		this.guessedLetters = [];
+		this.guessesLeft = 0;
+		this.totalGuesses = 0;
+		this.letterGuessed = null;
+		this.setupGame();
+		this.rebuildWordView();
+	}
 
-	// this.updateWins: function() {
+	this.updateWins = function() {
 
-	// 	//this won't work for words with double or triple letters
-	// 		//var lettersOfTheWordClone = this.lettersOfTheWord.slice(); //clones the array
-	// 		//this.matchedLetters.sort().join('') == lettersOfTheWordClone.sort().join('')
+		//this won't work for words with double or triple letters
+			//var lettersOfTheWordClone = this.lettersOfTheWord.slice(); //clones the array
+			//this.matchedLetters.sort().join('') == lettersOfTheWordClone.sort().join('')
 
-	// 	if (this.matchedLetters.length == 0){
-	// 		var win = false;
-	// 	}else{
-	// 		var win = true
-	// 	}
+		if (this.matchedLetters.length == 0){
+			var win = false;
+		}else{
+			var win = true
+		}
 		
-	// 	for (var i=0; i < this.lettersOfTheWord.length; i++){
-	// 		if (this.matchedLetters.indexOf(this.lettersOfTheWord[i]) == -1){
-	// 			win = false;
-	// 		}
-	// 	}
+		for (var i=0; i < this.lettersOfTheWord.length; i++){
+			if (this.matchedLetters.indexOf(this.lettersOfTheWord[i]) == -1){
+				win = false;
+			}
+		}
 
-	// 	if (win == true){
-	// 		this.wins =  this.wins + 1;
+		if (win == true){
+			this.wins =  this.wins + 1;
 			
-	// 		document.querySelector('#wins').innerHTML = this.wins;
+			// document.querySelector('#wins').innerHTML = this.wins;
 
-	// 		document.querySelector('#music').innerHTML = this.wordsToPick[this.wordInPlay].song + " By " + this.wordInPlay;
+			// document.querySelector('#music').innerHTML = this.wordsToPick[this.wordInPlay].song + " By " + this.wordInPlay;
 
-	// 		document.querySelector('#bandDiv').innerHTML = '<img class="bandImage" src="images/' + this.wordsToPick[this.wordInPlay].picture + '" alt="' + this.wordsToPick[this.wordInPlay].song + '">';
+			// document.querySelector('#bandDiv').innerHTML = '<img class="bandImage" src="images/' + this.wordsToPick[this.wordInPlay].picture + '" alt="' + this.wordsToPick[this.wordInPlay].song + '">';
 
-	// 		var audio = new Audio(this.wordsToPick[this.wordInPlay].preview);
-	// 		audio.play();
+			var audio = new Audio(this.wordsToPick[this.wordInPlay].preview);
+			audio.play();
 
 
-	// 		return true;
-	// 	}else{
-	// 		return false;
-	// 	}
-	// }
+			return true;
+		}else{
+			return false;
+		}
+	}
 };
 
 
@@ -241,21 +243,37 @@ play.setupGame(words);
 
 console.log('play after setup', play);
 
-play.updatePage("a"); // hard code to simulate user input.
+// play.updatePage("a"); // hard code to simulate user input.
 
-console.log('play after update: ', play);
+// console.log('play after update: ', play);
 
 var playCount = play.totalGuesses;
+
+var count = 0;
 
 var letsPlay = function(){
 
 	if (count < playCount) {
-		inquirer.prompt([{
+		Inquirer.prompt([{
 			name : "name",
-			message : "Letter? "
-		}]).then(play.updatePage(answers.name))
+			message : "Wins: " + play.wins + " # of Guesses Allowed: " + play.totalGuesses + " # of Guesses Left: " + play.guessesLeft + " Placeholder: " + play.wordView + " Letter? "
+		}]).then(function(answers) {
+			play.updatePage(answers.name);
+			// if(answers.name == play.updatePage()) {
+				// console.log('Guess: ' + answers.name);
+			// 	console.log('----------------');
+			// 	count = 2;
+			// }else {
+				count++;
+				letsPlay();
+			// }
+		})
+	}else {
+		console.log('over');
 	}
 }
+
+letsPlay();
 
 
 
