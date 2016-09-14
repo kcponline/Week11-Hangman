@@ -1,20 +1,12 @@
-// 
-// var word = require('./word.js');
-// 	console.log('letter.wordResult: ', word.wordResult);
+// pseudo - gets result of word evaluation as 2 parameters and rebuild wordView.
+var RebuildWordView = function(lettersOfTheWord, matchedLetters) {
+	this.wordView = "";
 
-// var letterwordResult = word.wordResult;
-// 	console.log(letterwordResult);
-
-// exports.letterwordResult;
-
-var RebuildWordView = function() {
-	var wordView = "";
-
-	for(var i=0; i < this.lettersOfTheWord.length; i++){
-		if (this.matchedLetters.indexOf(this.lettersOfTheWord[i]) != -1){
-			wordView += this.lettersOfTheWord[i];				
+	for(var i=0; i < lettersOfTheWord.length; i++){
+		if (matchedLetters.indexOf(lettersOfTheWord[i]) != -1){
+			this.wordView += lettersOfTheWord[i];				
 		}else{
-			wordView += '&nbsp;_&nbsp;';
+			this.wordView += ' _ ';
 		}
 	}
 
@@ -23,3 +15,13 @@ var RebuildWordView = function() {
 }
 
 module.exports = RebuildWordView;
+
+
+
+// var word = require('./word.js');
+// 	console.log('letter.wordResult: ', word.wordResult);
+
+// var letterwordResult = word.wordResult;
+// 	console.log(letterwordResult);
+
+// exports.letterwordResult;

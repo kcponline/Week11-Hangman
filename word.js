@@ -1,32 +1,38 @@
 // pseudo - evaluates the guessed letter.
-var letterEval = function(guessedLetters, lettersOfTheWord)
-	
-	updateGuesses = function(letter){
+exports.UpdateGuesses = function(letter, guessedLetters, lettersOfTheWord, guessesLeft){
 	//if the letter is not in the guessedLetters array
 	//and
 	//the letter is not in the lettersOfTheWord array
 	//then
 	//make guesses go down
-
-	if ((this.guessedLetters.indexOf(letter) == -1) && (this.lettersOfTheWord.indexOf(letter) == -1)){
-		
-		this.guessedLetters.push(letter);
-
+	this.guessedLetter = null;
+	this.guessesLeft = guessesLeft;
+	if ((guessedLetters.indexOf(letter) == -1) && (lettersOfTheWord.indexOf(letter) == -1)){
+		// this.guessedLetters.push(letter);
+		this.guessedLetter = letter;
 		this.guessesLeft--;
 
-		document.querySelector('#guesses-remaining').innerHTML = this.guessesLeft;
+		// document.querySelector('#guesses-remaining').innerHTML = this.guessesLeft;
 
-		document.querySelector("#guessed-letters").innerHTML = this.guessedLetters.join(', ');
-	};
-
-	updateMatchedLetters = function(letter){
-		for (var i = 0; i < this.lettersOfTheWord.length; i++) {
-			if ((letter === this.lettersOfTheWord[i]) && (this.matchedLetters.indexOf(letter) == -1)){
-				this.matchedLetters.push(letter);
-			};
-		};
+		// document.querySelector("#guessed-letters").innerHTML = this.guessedLetters.join(', ');
 	}
-}
+
+};
+
+exports.UpdateMatchedLetters = function(letter, lettersOfTheWord, matchedLetters){
+	this.matchedLetter = null;
+	for (var i = 0; i < lettersOfTheWord.length; i++) {
+		if ((letter === lettersOfTheWord[i]) && (matchedLetters.indexOf(letter) == -1)){
+			this.matchedLetter = letter;
+		};
+	};
+};
+
+// module.exports = UpdateGuesses;
+
+
+
+// module.exports = UpdateMatchedLetters
 
 // document.onkeyup = function(event) {
 // 	hangmanGame.letterGuessed = String.fromCharCode(event.keyCode).toLowerCase();

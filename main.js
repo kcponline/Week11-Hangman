@@ -3,6 +3,10 @@ var Inquirer = require('inquirer');
 
 var Game = require('./game.js');
 
+var Word = require('./word.js');
+	// console.log('Word', Word);
+var Letter = require('./letter.js');
+
 var words = ["ab","bc","cd"];
 
 var HangmanGame = function(){ // turn from obj to constructor.
@@ -72,6 +76,8 @@ var HangmanGame = function(){ // turn from obj to constructor.
 	this.totalGuesses = 0;
 	this.letterGuessed = null;
 	this.wins = 0;
+	this.wordView = null; // temp test
+	// this.letter = null; // temp test
 	this.setupGame = function(wordsToPick) { // add parameter to get words array.
 		// ---Pick a random word
 		// var objKeys = Object.keys(this.wordsToPick); // not applicable with array of words.
@@ -92,14 +98,26 @@ var HangmanGame = function(){ // turn from obj to constructor.
 			console.log("over");
 		}else{
 			// this.updateGuesses(letter);
-
+			this.guessesObj = new Word.UpdateGuesses(letter, this.guessedLetters, this.lettersOfTheWord, this.guessesLeft);
+			this.letterGuessed = this.guessesObj.guessedLetter;
+			this.guessedLetters.push(this.guessesObj.guessedLetter);
+			this.guessesLeft = this.guessesObj.guessesLeft;
 			// this.updateMatchedLetters(letter);
+			this.matchedObj = new Word.UpdateMatchedLetters(letter, this.lettersOfTheWord, this.matchedLetters);
+			this.matchedLetters.push(this.matchedObj.matchedLetter);
 
 			// this.rebuildWordView();
+			this.wordviewObj = new Letter(this.lettersOfTheWord, this.matchedLetters);
+			this.wordView = this.wordviewObj.wordView;
 
 			// if (this.updateWins() == true){
 			// 	this.restartGame();
 			// }
+			// this.wordObj = new Word(letter);
+			// console.log('wordObj', wordObj);
+			
+			
+			// console.log('letterObj: ', this.letterObj);
 			console.log('not over');
 		}
 
@@ -122,7 +140,7 @@ var HangmanGame = function(){ // turn from obj to constructor.
 
 	// 		document.querySelector("#guessed-letters").innerHTML = this.guessedLetters.join(', ');
 	// 	}
-	// },
+	// }, // move to word.js
 
 	this.processUpdateTotalGuesses = function() {
 			console.log('processUpdateTotalGuesses.guessesLeft: ', this.lettersOfTheWord);
@@ -140,7 +158,7 @@ var HangmanGame = function(){ // turn from obj to constructor.
 	// 			this.matchedLetters.push(letter);
 	// 		};
 	// 	};
-	// },
+	// }, // move to word.js
 
 	// this.rebuildWordView: function() {
 	// 	var wordView = "";
@@ -154,20 +172,20 @@ var HangmanGame = function(){ // turn from obj to constructor.
 	// 	}
 
 	// 	document.querySelector('#current-word').innerHTML = wordView;
-	// },
+	// }, // move to letter.js
 
-	this.restartGame = function(){
-		// document.querySelector('#guessed-letters').innerHTML = '';
-		this.wordInPlay = null;
-		this.lettersOfTheWord = [];
-		this.matchedLetters = [];
-		this.guessedLetters = [];
-		this.guessesLeft = 0;
-		this.totalGuesses = 0;
-		this.letterGuessed = null;
-		// this.setupGame();
-		// this.rebuildWordView();
-	}
+	// this.restartGame = function(){
+	// 	// document.querySelector('#guessed-letters').innerHTML = '';
+	// 	this.wordInPlay = null;
+	// 	this.lettersOfTheWord = [];
+	// 	this.matchedLetters = [];
+	// 	this.guessedLetters = [];
+	// 	this.guessesLeft = 0;
+	// 	this.totalGuesses = 0;
+	// 	this.letterGuessed = null;
+	// 	// this.setupGame();
+	// 	// this.rebuildWordView();
+	// }
 
 	// this.updateWins: function() {
 
@@ -205,28 +223,39 @@ var HangmanGame = function(){ // turn from obj to constructor.
 	// 		return false;
 	// 	}
 	// }
-		console.log('HangmanGame.wordInPlay: ', this.wordInPlay);
-		console.log('HangmanGame.lettersOfTheWord: ', this.lettersOfTheWord);
 };
 
-// creates a new object from the HangmanGame constructor which in a hilarious way
-// essentially gives me the original hangmanGame object behaving exactly the same as before.
-var Play = new HangmanGame();
 
-// calls setupGame inside new object Play with 'ab' argument
-Play.setupGame(words);
-
-console.log('play', Play);
 
 // document.onkeyup = function(event) {
 // 	hangmanGame.letterGuessed = String.fromCharCode(event.keyCode).toLowerCase();
 // 	hangmanGame.updatePage(hangmanGame.letterGuessed);
 // }
 
-Play.updatePage("b"); // hard code to simulate user input.
+// creates a new object from the HangmanGame constructor which in a hilarious way
+// essentially gives me the original hangmanGame object behaving exactly the same as before.
+var play = new HangmanGame();
+// module.exports = play;
+// calls setupGame inside new object Play with 'ab' argument
+play.setupGame(words);
 
+console.log('play after setup', play);
 
+play.updatePage("a"); // hard code to simulate user input.
 
+console.log('play after update: ', play);
+
+var playCount = play.totalGuesses;
+
+var letsPlay = function(){
+
+	if (count < playCount) {
+		inquirer.prompt([{
+			name : "name",
+			message : "Letter? "
+		}]).then(play.updatePage(answers.name))
+	}
+}
 
 
 
