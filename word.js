@@ -1,42 +1,32 @@
-var Dud = require('./dud.js');
+// pseudo - evaluates the guessed letter.
+var letterEval = function(guessedLetters, lettersOfTheWord)
+	
+	updateGuesses = function(letter){
+	//if the letter is not in the guessedLetters array
+	//and
+	//the letter is not in the lettersOfTheWord array
+	//then
+	//make guesses go down
 
-var PartyBus = function(driverName, startLocation, destination){
-	this.duds = [];
-	this.driverName = driverName;
-	this.startLocation = startLocation;
-	this.destination = destination;
-	this.addDud = function(g, n, r){
-		this.duds.push(new Dud(g, n, r));
-	}
-}
+	if ((this.guessedLetters.indexOf(letter) == -1) && (this.lettersOfTheWord.indexOf(letter) == -1)){
+		
+		this.guessedLetters.push(letter);
 
-module.exports = PartyBus;
+		this.guessesLeft--;
 
-	updateGuesses: function(letter){
-		//if the letter is not in the guessedLetters array
-		//and
-		//the letter is not in the lettersOfTheWord array
-		//then
-		//make guesses go down
+		document.querySelector('#guesses-remaining').innerHTML = this.guessesLeft;
 
-		if ((this.guessedLetters.indexOf(letter) == -1) && (this.lettersOfTheWord.indexOf(letter) == -1)){
-			
-			this.guessedLetters.push(letter);
+		document.querySelector("#guessed-letters").innerHTML = this.guessedLetters.join(', ');
+	};
 
-			this.guessesLeft--;
-
-			document.querySelector('#guesses-remaining').innerHTML = this.guessesLeft;
-
-			document.querySelector("#guessed-letters").innerHTML = this.guessedLetters.join(', ');
-		}
-	},
-	updateMatchedLetters: function(letter){
+	updateMatchedLetters = function(letter){
 		for (var i = 0; i < this.lettersOfTheWord.length; i++) {
 			if ((letter === this.lettersOfTheWord[i]) && (this.matchedLetters.indexOf(letter) == -1)){
 				this.matchedLetters.push(letter);
 			};
 		};
-	},
+	}
+}
 
 // document.onkeyup = function(event) {
 // 	hangmanGame.letterGuessed = String.fromCharCode(event.keyCode).toLowerCase();
@@ -86,3 +76,17 @@ module.exports = PartyBus;
 
 // 	blanksAndSuccesses = []; // CRITICAL LINE - here we *reset* the guess and success array at each round. 
 // 	wrongGuesses = []; // CRITICAL LINE - here we *reset* the wrong guesses from the previous round.
+
+// var Dud = require('./dud.js');
+
+// var PartyBus = function(driverName, startLocation, destination){
+// 	this.duds = [];
+// 	this.driverName = driverName;
+// 	this.startLocation = startLocation;
+// 	this.destination = destination;
+// 	this.addDud = function(g, n, r){
+// 		this.duds.push(new Dud(g, n, r));
+// 	}
+// }
+
+// module.exports = PartyBus;

@@ -1,13 +1,11 @@
 
-var inquirer = require('inquirer');
+var Inquirer = require('inquirer');
 
-var game = require('./game.js');
-var word = game.chosenWord;
-	console.log('word', word)
+var Game = require('./game.js');
 
-console.log("Let's Play Hangman!");
+var words = ["ab","bc","cd"];
 
-var hangmanGame = {
+var HangmanGame = function(){ // turn from obj to constructor.
 	// wordsToPick: {
 		// 	"genesis" : {
 		// 		picture: 'genesis.jpg',
@@ -64,45 +62,50 @@ var hangmanGame = {
 		// 		song: 'Call Me',
 		// 		preview: 'https://p.scdn.co/mp3-preview/ed5a443bc86176135ebca8a114f66f4d814d4c90'
 		// 	}
-	// },
-	wordInPlay: null,
-	lettersOfTheWord: [],
-	matchedLetters: [],
-	guessedLetters: [],
-	guessesLeft: 0,
-	totalGuesses: 0,
-	letterGuessed: null,
-	wins: 0,
-	setupGame: function() {
+	// }, // move to global as array instead of object.
+	// this.wordsToPick = ["ab","bc","cd"]; // move out to global.
+	this.wordInPlay = null; // move to method setupGame
+	this.lettersOfTheWord = [];
+	this.matchedLetters = [];
+	this.guessedLetters = [];
+	this.guessesLeft = 0;
+	this.totalGuesses = 0;
+	this.letterGuessed = null;
+	this.wins = 0;
+	this.setupGame = function(wordsToPick) { // add parameter to get words array.
 		// ---Pick a random word
-		// var objKeys = Object.keys(this.wordsToPick);
-		// this.wordInPlay = objKeys[Math.floor(Math.random() * objKeys.length)];
-		this.wordInPlay = word;
-
+		// var objKeys = Object.keys(this.wordsToPick); // not applicable with array of words.
+		// this.wordInPlay = objKeys[Math.floor(Math.random() * objKeys.length)]; // move to game as method in constructor.
+		this.wordInPlayObj = new Game(wordsToPick); // add - creates new object with wordRandom property.
+			console.log ('setupGame.wordInPlayObj: ', this.wordInPlayObj);
+		this.wordInPlay = this.wordInPlayObj.wordRandom; // call wordRandom to set up to split
+			console.log ('setupGame.wordInPlay: ', this.wordInPlay);
 		this.lettersOfTheWord = this.wordInPlay.split('');
-			console.log (this.lettersOfTheWord);
+			console.log ('setupGame.lettersOfTheWord: ', this.lettersOfTheWord);
 		// this.rebuildWordView();
-		// this.processUpdateTotalGuesses();
+		this.processUpdateTotalGuesses();
 	// },
-	}
-	updatePage: function(letter) {
+	};
+	this.updatePage = function(letter) {
 		if (this.guessesLeft == 0){
-			this.restartGame();
+			// this.restartGame();
+			console.log("over");
 		}else{
-			this.updateGuesses(letter);
+			// this.updateGuesses(letter);
 
-			this.updateMatchedLetters(letter);
+			// this.updateMatchedLetters(letter);
 
-			this.rebuildWordView();
+			// this.rebuildWordView();
 
-			if (this.updateWins() == true){
-				this.restartGame();
-			}
+			// if (this.updateWins() == true){
+			// 	this.restartGame();
+			// }
+			console.log('not over');
 		}
 
-	},
+	};
 
-	// updateGuesses: function(letter){
+	// this.updateGuesses: function(letter){
 	// 	//if the letter is not in the guessedLetters array
 	// 	//and
 	// 	//the letter is not in the lettersOfTheWord array
@@ -121,15 +124,17 @@ var hangmanGame = {
 	// 	}
 	// },
 
-	processUpdateTotalGuesses: function() {
+	this.processUpdateTotalGuesses = function() {
+			console.log('processUpdateTotalGuesses.guessesLeft: ', this.lettersOfTheWord);
 		this.totalGuesses = this.lettersOfTheWord.length + 5;
 		this.guessesLeft = this.totalGuesses;
 
 		// ---Render the guesses left
-		document.querySelector('#guesses-remaining').innerHTML = this.guessesLeft;
-	},
+		// document.querySelector('#guesses-remaining').innerHTML = this.guessesLeft;
+			console.log('processUpdateTotalGuesses.guessesLeft: ', this.guessesLeft);
+	};
 
-	// updateMatchedLetters: function(letter){
+	// this.updateMatchedLetters: function(letter){
 	// 	for (var i = 0; i < this.lettersOfTheWord.length; i++) {
 	// 		if ((letter === this.lettersOfTheWord[i]) && (this.matchedLetters.indexOf(letter) == -1)){
 	// 			this.matchedLetters.push(letter);
@@ -137,7 +142,7 @@ var hangmanGame = {
 	// 	};
 	// },
 
-	// rebuildWordView: function() {
+	// this.rebuildWordView: function() {
 	// 	var wordView = "";
 
 	// 	for(var i=0; i < this.lettersOfTheWord.length; i++){
@@ -151,8 +156,8 @@ var hangmanGame = {
 	// 	document.querySelector('#current-word').innerHTML = wordView;
 	// },
 
-	restartGame : function(){
-		document.querySelector('#guessed-letters').innerHTML = '';
+	this.restartGame = function(){
+		// document.querySelector('#guessed-letters').innerHTML = '';
 		this.wordInPlay = null;
 		this.lettersOfTheWord = [];
 		this.matchedLetters = [];
@@ -160,53 +165,65 @@ var hangmanGame = {
 		this.guessesLeft = 0;
 		this.totalGuesses = 0;
 		this.letterGuessed = null;
-		this.setupGame();
-		this.rebuildWordView();
-	},
-	updateWins: function() {
-
-		//this won't work for words with double or triple letters
-			//var lettersOfTheWordClone = this.lettersOfTheWord.slice(); //clones the array
-			//this.matchedLetters.sort().join('') == lettersOfTheWordClone.sort().join('')
-
-		if (this.matchedLetters.length == 0){
-			var win = false;
-		}else{
-			var win = true
-		}
-		
-		for (var i=0; i < this.lettersOfTheWord.length; i++){
-			if (this.matchedLetters.indexOf(this.lettersOfTheWord[i]) == -1){
-				win = false;
-			}
-		}
-
-		if (win == true){
-			this.wins =  this.wins + 1;
-			
-			document.querySelector('#wins').innerHTML = this.wins;
-
-			document.querySelector('#music').innerHTML = this.wordsToPick[this.wordInPlay].song + " By " + this.wordInPlay;
-
-			document.querySelector('#bandDiv').innerHTML = '<img class="bandImage" src="images/' + this.wordsToPick[this.wordInPlay].picture + '" alt="' + this.wordsToPick[this.wordInPlay].song + '">';
-
-			var audio = new Audio(this.wordsToPick[this.wordInPlay].preview);
-			audio.play();
-
-
-			return true;
-		}else{
-			return false;
-		}
+		// this.setupGame();
+		// this.rebuildWordView();
 	}
+
+	// this.updateWins: function() {
+
+	// 	//this won't work for words with double or triple letters
+	// 		//var lettersOfTheWordClone = this.lettersOfTheWord.slice(); //clones the array
+	// 		//this.matchedLetters.sort().join('') == lettersOfTheWordClone.sort().join('')
+
+	// 	if (this.matchedLetters.length == 0){
+	// 		var win = false;
+	// 	}else{
+	// 		var win = true
+	// 	}
+		
+	// 	for (var i=0; i < this.lettersOfTheWord.length; i++){
+	// 		if (this.matchedLetters.indexOf(this.lettersOfTheWord[i]) == -1){
+	// 			win = false;
+	// 		}
+	// 	}
+
+	// 	if (win == true){
+	// 		this.wins =  this.wins + 1;
+			
+	// 		document.querySelector('#wins').innerHTML = this.wins;
+
+	// 		document.querySelector('#music').innerHTML = this.wordsToPick[this.wordInPlay].song + " By " + this.wordInPlay;
+
+	// 		document.querySelector('#bandDiv').innerHTML = '<img class="bandImage" src="images/' + this.wordsToPick[this.wordInPlay].picture + '" alt="' + this.wordsToPick[this.wordInPlay].song + '">';
+
+	// 		var audio = new Audio(this.wordsToPick[this.wordInPlay].preview);
+	// 		audio.play();
+
+
+	// 		return true;
+	// 	}else{
+	// 		return false;
+	// 	}
+	// }
+		console.log('HangmanGame.wordInPlay: ', this.wordInPlay);
+		console.log('HangmanGame.lettersOfTheWord: ', this.lettersOfTheWord);
 };
 
-hangmanGame.setupGame();
+// creates a new object from the HangmanGame constructor which in a hilarious way
+// essentially gives me the original hangmanGame object behaving exactly the same as before.
+var Play = new HangmanGame();
+
+// calls setupGame inside new object Play with 'ab' argument
+Play.setupGame(words);
+
+console.log('play', Play);
 
 // document.onkeyup = function(event) {
 // 	hangmanGame.letterGuessed = String.fromCharCode(event.keyCode).toLowerCase();
 // 	hangmanGame.updatePage(hangmanGame.letterGuessed);
 // }
+
+Play.updatePage("b"); // hard code to simulate user input.
 
 
 
